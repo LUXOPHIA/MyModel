@@ -77,7 +77,7 @@ begin
           begin
                Length := 2{Poin} * _DivN{Wire};
 
-               for I := 0 to _DivN - 1 do
+               for I := 0 to _DivN-1 do
                begin
                     Indices[ 2 * I     ] := I    ;
                     Indices[ 2 * I + 1 ] := I + 1;

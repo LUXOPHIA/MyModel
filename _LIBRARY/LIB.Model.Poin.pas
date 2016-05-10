@@ -24,15 +24,14 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        _Count    :Integer;
        ///// アクセス
        procedure SetCount( const Count_:Integer );
-       /////
+       ///// メソッド
        procedure Render; override;
      public
        constructor Create( Owner_:TComponent ); override;
        destructor Destroy; override;
        ///// プロパティ
-       property Material :TMaterialSource read _Material write _Material;
-       property Count    :Integer         read _Count    write SetCount;
-       ///// メソッド
+       property Material :TMaterialSource read _Material write   _Material;
+       property Count    :Integer         read _Count    write SetCount   ;
      end;
 
 //const //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【定数】
@@ -63,7 +62,7 @@ begin
           begin
                Length := _Count{Poin};
 
-               for I := 0 to _Count - 1 do
+               for I := 0 to _Count-1 do
                begin
                     Vertices [ I ] := TPoint3D.Create( RandG( 0, 0.5 ), RandG( 0, 0.5 ), RandG( 0, 0.5 ) );
 
@@ -75,7 +74,7 @@ begin
           begin
                Length := _Count{Poin};
 
-               for I := 0 to _Count - 1 do Indices[ I ] := I;
+               for I := 0 to _Count-1 do Indices[ I ] := I;
           end;
      end;
 end;
