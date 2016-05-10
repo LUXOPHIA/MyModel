@@ -79,8 +79,6 @@ begin
 
                          Vertices [ I ] := TPoint3D.Create( 2 * X / _DivX - 1, 2 * Y / _DivY - 1, -1 ).Normalize;
 
-                         Normals  [ I ] := Vertices[ I ];
-
                          TexCoord0[ I ] := TPointF.Create( X / _DivX, Y / _DivY );
                     end;
                end;
@@ -91,20 +89,29 @@ begin
                Length := 3{Poin} * 2{Face} * _DivX * _DivY;
 
                I := 0;
-               for Y := 0 to _DivY - 1 do
+               for Y := 0 to _DivY-1 do
                begin
-                    for X := 0 to _DivX - 1 do
+                    for X := 0 to _DivX-1 do
                     begin
-                         Indices[ I ] := XYtoI( X    , Y     );  Inc( I );
-                         Indices[ I ] := XYtoI( X + 1, Y     );  Inc( I );
-                         Indices[ I ] := XYtoI( X + 1, Y + 1 );  Inc( I );
+                         //    X0      X1
+                         //  Y0┼───┼
+                         //    │＼    │
+                         //    │  ＼  │
+                         //    │    ＼│
+                         //  Y1┼───┼
 
-                         Indices[ I ] := XYtoI( X + 1, Y + 1 );  Inc( I );
-                         Indices[ I ] := XYtoI( X    , Y + 1 );  Inc( I );
-                         Indices[ I ] := XYtoI( X    , Y     );  Inc( I );
+                         Indices[ I ] := XYtoI( X  , Y   );  Inc( I );
+                         Indices[ I ] := XYtoI( X+1, Y   );  Inc( I );
+                         Indices[ I ] := XYtoI( X+1, Y+1 );  Inc( I );
+
+                         Indices[ I ] := XYtoI( X+1, Y+1 );  Inc( I );
+                         Indices[ I ] := XYtoI( X  , Y+1 );  Inc( I );
+                         Indices[ I ] := XYtoI( X  , Y   );  Inc( I );
                     end;
                end;
           end;
+
+          CalcSmoothNormals( TCalculateNormalMethod.Fastest );
      end;
 end;
 
