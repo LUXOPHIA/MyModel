@@ -19,7 +19,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        ///// メソッド
        procedure MakeModel;
      protected
-       _Geometry     :TMeshData;
+       _Geometry :TMeshData;
        _Material :TMaterialSource;
        _DivN     :Integer;
        ///// アクセス
