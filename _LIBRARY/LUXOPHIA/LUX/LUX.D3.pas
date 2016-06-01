@@ -50,6 +50,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        ///// メソッド
        function VectorTo( const P_:TSingle3D ) :TSingle3D;
        function UnitorTo( const P_:TSingle3D ) :TSingle3D;
+       class function RandG :TSingle3D; inline; static;
      end;
 
      TSinglePos3D = TSingle3D;
@@ -96,6 +97,7 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        ///// メソッド
        function VectorTo( const P_:TDouble3D ) :TDouble3D;
        function UnitorTo( const P_:TDouble3D ) :TDouble3D;
+       class function RandG :TDouble3D; inline; static;
      end;
 
      TDoublePos3D = TDouble3D;
@@ -155,18 +157,50 @@ type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
        class operator Implicit( const V_:TDoubleSiz3D ) :TDouble3D;
      end;
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSingleRay3D
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSingleArea3D
 
-     TSingleRay3D = record
+     TSingleArea3D = record
+     private
+       ///// アクセス
+       function GetPoin( const I_:Integer ) :TSingle3D;
+     public
+       Min :TSingle3D;
+       Max :TSingle3D;
+       /////
+       constructor Create( const MinX_,MinY_,MinZ_,MaxX_,MaxY_,MaxZ_:Single ); overload;
+       constructor Create( const Min_,Max_:TSingle3D ); overload;
+       ///// プロパティ
+       property Poin[ const I_:Integer ] :TSingle3D read GetPoin;
+     end;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDoubleArea3D
+
+     TDoubleArea3D = record
+     private
+       ///// アクセス
+       function GetPoin( const I_:Integer ) :TDouble3D;
+     public
+       Min :TDouble3D;
+       Max :TDouble3D;
+       /////
+       constructor Create( const MinX_,MinY_,MinZ_,MaxX_,MaxY_,MaxZ_:Double ); overload;
+       constructor Create( const Min_,Max_:TDouble3D ); overload;
+       ///// プロパティ
+       property Poin[ const I_:Integer ] :TDouble3D read GetPoin;
+     end;
+
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSingleArrow3D
+
+     TSingleArrow3D = record
      private
      public
        Pos :TSinglePos3D;
        Vec :TSingleVec3D;
      end;
 
-     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDoubleRay3D
+     //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDoubleArrow3D
 
-     TDoubleRay3D = record
+     TDoubleArrow3D = record
      private
      public
        Pos :TDoublePos3D;
@@ -193,8 +227,14 @@ function Distanc2( const A_,B_:TDoublePos3D ) :Double; inline; overload;
 function Distance( const A_,B_:TSinglePos3D ) :Single; inline; overload;
 function Distance( const A_,B_:TDoublePos3D ) :Double; inline; overload;
 
-function Ave( const A_,B_:TSingle3D ) :TSingle3D; inline; overload;
-function Ave( const A_,B_:TDouble3D ) :TDouble3D; inline; overload;
+function Ave( const P1_,P2_:TSingle3D ) :TSingle3D; inline; overload;
+function Ave( const P1_,P2_:TDouble3D ) :TDouble3D; inline; overload;
+
+function Ave( const P1_,P2_,P3_:TSingle3D ) :TSingle3D; inline; overload;
+function Ave( const P1_,P2_,P3_:TDouble3D ) :TDouble3D; inline; overload;
+
+function Ave( const P1_,P2_,P3_,P4_:TSingle3D ) :TSingle3D; inline; overload;
+function Ave( const P1_,P2_,P3_,P4_:TDouble3D ) :TDouble3D; inline; overload;
 
 implementation //############################################################### ■
 
@@ -395,6 +435,16 @@ begin
      Result := VectorTo( P_ ).Unitor;
 end;
 
+class function TSingle3D.RandG :TSingle3D;
+begin
+     with Result do
+     begin
+          X := System.Math.RandG( 0, 1 );
+          Y := System.Math.RandG( 0, 1 );
+          Z := System.Math.RandG( 0, 1 );
+     end;
+end;
+
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDouble3D
 
 //&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
@@ -586,6 +636,16 @@ end;
 function TDouble3D.UnitorTo( const P_:TDouble3D ) :TDouble3D;
 begin
      Result := VectorTo( P_ ).Unitor;
+end;
+
+class function TDouble3D.RandG :TDouble3D;
+begin
+     with Result do
+     begin
+          X := System.Math.RandG( 0, 1 );
+          Y := System.Math.RandG( 0, 1 );
+          Z := System.Math.RandG( 0, 1 );
+     end;
 end;
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSingleSiz3D
@@ -862,6 +922,105 @@ begin
      end;
 end;
 
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSingleArea3D
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+function TSingleArea3D.GetPoin( const I_:Integer ) :TSingle3D;
+begin
+     case I_ of
+       0: Result := TSingle3D.Create( Min.X, Min.Y, Min.Z );
+       1: Result := TSingle3D.Create( Max.X, Min.Y, Min.Z );
+       2: Result := TSingle3D.Create( Min.X, Max.Y, Min.Z );
+       3: Result := TSingle3D.Create( Max.X, Max.Y, Min.Z );
+       4: Result := TSingle3D.Create( Min.X, Min.Y, Max.Z );
+       5: Result := TSingle3D.Create( Max.X, Min.Y, Max.Z );
+       6: Result := TSingle3D.Create( Min.X, Max.Y, Max.Z );
+       7: Result := TSingle3D.Create( Max.X, Max.Y, Max.Z );
+     end;
+end;
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+constructor TSingleArea3D.Create( const MinX_,MinY_,MinZ_,MaxX_,MaxY_,MaxZ_:Single );
+begin
+     with Min do
+     begin
+          X := MinX_;
+          Y := MinY_;
+          Z := MinZ_;
+     end;
+
+     with Max do
+     begin
+          X := MaxX_;
+          Y := MaxY_;
+          Z := MaxZ_;
+     end;
+end;
+
+constructor TSingleArea3D.Create( const Min_,Max_:TSingle3D );
+begin
+     Min := Min_;
+     Max := Max_;
+end;
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDoubleArea3D
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+function TDoubleArea3D.GetPoin( const I_:Integer ) :TDouble3D;
+begin
+     case I_ of
+       0: Result := TDouble3D.Create( Min.X, Min.Y, Min.Z );
+       1: Result := TDouble3D.Create( Max.X, Min.Y, Min.Z );
+       2: Result := TDouble3D.Create( Min.X, Max.Y, Min.Z );
+       3: Result := TDouble3D.Create( Max.X, Max.Y, Min.Z );
+       4: Result := TDouble3D.Create( Min.X, Min.Y, Max.Z );
+       5: Result := TDouble3D.Create( Max.X, Min.Y, Max.Z );
+       6: Result := TDouble3D.Create( Min.X, Max.Y, Max.Z );
+       7: Result := TDouble3D.Create( Max.X, Max.Y, Max.Z );
+     end;
+end;
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+constructor TDoubleArea3D.Create( const MinX_,MinY_,MinZ_,MaxX_,MaxY_,MaxZ_:Double );
+begin
+     with Min do
+     begin
+          X := MinX_;
+          Y := MinY_;
+          Z := MinZ_;
+     end;
+
+     with Max do
+     begin
+          X := MaxX_;
+          Y := MaxY_;
+          Z := MaxZ_;
+     end;
+end;
+
+constructor TDoubleArea3D.Create( const Min_,Max_:TDouble3D );
+begin
+     Min := Min_;
+     Max := Max_;
+end;
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TSingleArrow3D
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TDoubleArrow3D
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& private
+
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& public
+
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【クラス】
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【ルーチン】
@@ -928,14 +1087,34 @@ end;
 
 ////////////////////////////////////////////////////////////////////////////////
 
-function Ave( const A_,B_:TSingle3D ) :TSingle3D;
+function Ave( const P1_,P2_:TSingle3D ) :TSingle3D;
 begin
-     Result := ( A_ + B_ ) / 2;
+     Result := ( P1_ + P2_ ) / 2;
 end;
 
-function Ave( const A_,B_:TDouble3D ) :TDouble3D;
+function Ave( const P1_,P2_:TDouble3D ) :TDouble3D;
 begin
-     Result := ( A_ + B_ ) / 2;
+     Result := ( P1_ + P2_ ) / 2;
+end;
+
+function Ave( const P1_,P2_,P3_:TSingle3D ) :TSingle3D;
+begin
+     Result := ( P1_ + P2_ + P3_ ) / 3;
+end;
+
+function Ave( const P1_,P2_,P3_:TDouble3D ) :TDouble3D;
+begin
+     Result := ( P1_ + P2_ + P3_ ) / 3;
+end;
+
+function Ave( const P1_,P2_,P3_,P4_:TSingle3D ) :TSingle3D;
+begin
+     Result := ( P1_ + P2_ + P3_ + P4_ ) / 4;
+end;
+
+function Ave( const P1_,P2_,P3_,P4_:TDouble3D ) :TDouble3D;
+begin
+     Result := ( P1_ + P2_ + P3_ + P4_ ) / 4;
 end;
 
 //############################################################################## □
