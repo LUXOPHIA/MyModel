@@ -7,7 +7,6 @@ uses
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs,
   System.Math.Vectors,
   FMX.Types3D, FMX.Viewport3D, FMX.Controls3D, FMX.Objects3D, FMX.MaterialSources,
-  LUX,
   LIB.Model.Poin, LIB.Model.Wire, LIB.Model.Face;
 
 type
@@ -111,5 +110,9 @@ begin
 
      _MouseS := [];
 end;
+
+initialization /////////////////////////////////////////////////////////////////
+
+     SetCurrentDir( ExtractFilePath( ParamStr( 0 ) ) );
 
 end. //######################################################################### ■
