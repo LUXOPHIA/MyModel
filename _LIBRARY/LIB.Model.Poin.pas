@@ -3,8 +3,7 @@
 interface //#################################################################### ■
 
 uses System.Types, System.Classes, System.Math.Vectors,
-     FMX.Types3D, FMX.Controls3D, FMX.MaterialSources,
-     LUX;
+     FMX.Types3D, FMX.Controls3D, FMX.MaterialSources;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 

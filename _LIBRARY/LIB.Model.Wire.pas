@@ -3,8 +3,7 @@
 interface //#################################################################### ■
 
 uses System.Types, System.Classes, System.Math.Vectors,
-     FMX.Types3D, FMX.Controls3D, FMX.MaterialSources,
-     LUX;
+     FMX.Types3D, FMX.Controls3D, FMX.MaterialSources;
 
 type //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$【型】
 
@@ -65,7 +64,7 @@ begin
 
                for I := 0 to _DivN do
                begin
-                    T := Pi2 * I / _DivN;
+                    T := Pi*2 * I / _DivN;
 
                     Vertices [ I ] := TPoint3D.Create( Cos( 1 * T ), Sin( 2 * T ), Sin( 3 * T ) );
 
